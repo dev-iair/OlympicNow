@@ -39,7 +39,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="/" style="font-size: 25px">OLYMPIC NOW</a>
+                            <a href="/" style="font-size: 19px"><img src="{% static "/images/logo/logo.png" %}">&nbsp;OLYMPIC NOW</a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -50,19 +50,19 @@
                     <ul class="menu">
                         <li class="sidebar-item ">
                             <a href="/" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
+                                <i class="bi bi-bar-chart-fill"></i>
                                 <span class="mt-1">종합</span>
                             </a>
                         </li>
                         <li class="sidebar-item ">
                             <a href="/sports" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
+                                <i class="bi bi-trophy-fill"></i>
                                 <span class="mt-1">종목</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
+                        <li class="sidebar-item active">
                             <a href="/players" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
+                                <i class="bi bi-people-fill"></i>
                                 <span class="mt-1">선수</span>
                             </a>
                         </li>
@@ -114,6 +114,9 @@ $(".selector").flatpickr({
     enable: [{ from: "2021-07-01",
             to: "2021-08-30" }],
     mode : "range",
+    defaultDate : "2021-07-23 ~ 2021-08-08"
+
+
 });
 
 Chart.defaults.font.family = 'Cafe24SsurroundAir';
