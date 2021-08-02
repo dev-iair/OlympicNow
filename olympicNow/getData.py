@@ -63,8 +63,7 @@ for searchDate in dateList:
             getTitle = getList['title']
             result += getTitle + ' '
 
-    # nouns = Komoran(userdic='userdic.txt').nouns(result)
-    nouns = Komoran().nouns(result)
+    nouns = Komoran(userdic='userdic.txt').nouns(result)
     getSports = []
     getPlayers = []
     getTotal = []
@@ -78,7 +77,9 @@ for searchDate in dateList:
     cntSports = Counter(getSports).most_common()
     cntPlayers = Counter(getPlayers).most_common()
     cntTotal = Counter(getTotal).most_common()
+    print(cntTotal)
     print(cntPlayers)
+    print(cntSports)
 #     for n, c in cntSports:
 #         cursor.execute("INSERT INTO OLPNOW_SPORTS VALUES (:RDATE, :SNAME, :SCOUNT)", [dateDate, n, c])
 #     for n, c in cntPlayers:
