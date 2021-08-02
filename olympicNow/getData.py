@@ -44,7 +44,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.55'}
 
-dateIndex = pandas.date_range(start='20210708', end='20210730')
+dateIndex = pandas.date_range(start='20210728', end='20210728')
 dateList = dateIndex.strftime("%Y%m%d").tolist()
 
 for searchDate in dateList:
@@ -63,10 +63,13 @@ for searchDate in dateList:
             getTitle = getList['title']
             result += getTitle + ' '
 
-    nouns = Komoran(userdic='userdic.txt').nouns(result)
+    # nouns = Komoran(userdic='userdic.txt').nouns(result)
+    nouns = Komoran().nouns(result)
     getSports = []
     getPlayers = []
+    getTotal = []
     for n in nouns:
+        getTotal.append(n)
         if n in sports:
             getSports.append(n)
         if n in players:
@@ -74,24 +77,29 @@ for searchDate in dateList:
 
     cntSports = Counter(getSports).most_common()
     cntPlayers = Counter(getPlayers).most_common()
-
-    for n, c in cntSports:
-        cursor.execute("INSERT INTO OLPNOW_SPORTS VALUES (:RDATE, :SNAME, :SCOUNT)", [dateDate, n, c])
-    for n, c in cntPlayers:
-        cursor.execute("INSERT INTO OLPNOW_PLAYERS VALUES (:RDATE, :PNAME, :PCOUNT)", [dateDate, n, c])
-
-conn.commit()
-conn.close()
-    # tagSports = {}
-    # tagPlayers = {}
-    #
-    # for n, c in cntSports:
-    #     tagSports[n] = c
-    # for n, c in cntPlayers:
-    #     tagPlayers[n] = c
-
-# wcResult = WordCloud(font_path='NanumSquareRoundR.ttf',
-#                      max_font_size=768, width=3840, height=2160).generate_from_frequencies(tagSports)
+    cntTotal = Counter(getTotal).most_common()
+    print(cntPlayers)
+#     for n, c in cntSports:
+#         cursor.execute("INSERT INTO OLPNOW_SPORTS VALUES (:RDATE, :SNAME, :SCOUNT)", [dateDate, n, c])
+#     for n, c in cntPlayers:
+#         cursor.execute("INSERT INTO OLPNOW_PLAYERS VALUES (:RDATE, :PNAME, :PCOUNT)", [dateDate, n, c])
+#
+# conn.commit()
+# conn.close()
+# tagSports = {}
+# tagPlayers = {}
+#
+# for n, c in cntSports:
+#     tagSports[n] = c
+#
+# for n, c in cntPlayers:
+#     tagPlayers[n] = c
+#
+# print(cntSports)
+# print(tagSports)
+#
+# wcResult = WordCloud(font_path='Cafe24Ohsquare.ttf', background_color='white',
+#                      max_font_size=768, width=3840, height=2160).generate_from_frequencies(tagPlayers)
 # plt.axis('off')
 # plt.imshow(wcResult, interpolation='bilinear')
 # plt.show()

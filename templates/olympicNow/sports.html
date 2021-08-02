@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLYMPIC NOW</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "/css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendors/iconly/bold.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendors/perfect-scrollbar/perfect-scrollbar.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendors/bootstrap-icons/bootstrap-icons.css" %}" />
+    <link rel="stylesheet" href="{% static "/css/app.css" %}" />
+    <link rel="shortcut icon" href="{% static "/images/favicon.svg" %}" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5/locales-all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Cafe24SsurroundAir';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body style="font-family: 'Cafe24SsurroundAir' !important;">
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="/" style="font-size: 25px">OLYMPIC NOW</a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-item ">
+                            <a href="/" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span class="mt-1">종합</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item ">
+                            <a href="/sports" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span class="mt-1">종목</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item ">
+                            <a href="/players" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span class="mt-1">선수</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            <div class="page-content">
+                <div class="row mb-4">
+                <div class="col-md-auto">
+                    <input type="text" class="form-control" id="sname" placeholder="종목 입력">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control selector" placeholder="기간 입력" readonly>
+                </div>
+                <div class="col-md-auto">
+                    <button class="btn btn-primary" type="button" id="searchBtn">검색</button>
+                </div>
+
+                </div>
+                <section class="row">
+                    <div class="col-12 col-lg-12">
+                        <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body" style="height: 600px">
+                                    <canvas id="line"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+flatpickr.localize(flatpickr.l10ns.ko);
+
+$(".selector").flatpickr({
+    enable: [{ from: "2021-07-01",
+            to: "2021-08-30" }],
+    mode : "range",
+});
+
+Chart.defaults.font.family = 'Cafe24SsurroundAir';
+var line = document.getElementById("line").getContext("2d");
+var myline = new Chart(line, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            data: [],
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+            }
+        },
+
+    }
+});
+</script>
+    <script>
+        var chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            info: '#41B1F9',
+            blue: '#3245D1',
+            purple: 'rgb(153, 102, 255)',
+            grey: '#6f7072'
+        };
+
+        $('#searchBtn').on('click', function(){
+            selDate = $('.selector').val();
+            startDate=selDate.substr(0,10);
+            endDate=selDate.substr(selDate.length-10,10);
+            sName = $('#sname').val()
+                var params = {startDate: startDate, endDate: endDate, sName: sName};
+                $.ajax({
+                    url: "{% url 'getschart' %}",
+                    type: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    success: function (data) {
+                        getResult = data;
+                        myline.data.datasets.pop();
+                        for (var i = 0; i<70; i++){
+                            myline.data.labels.splice(-1, 1);
+                        }
+                        const playerDataset = {
+                            label: "기사 언급 횟수",
+                            backgroundColor: [chartColors.blue],
+                            borderColor: [chartColors.blue],
+                            data: data.scount,
+                          };
+                        myline.data.datasets.push(playerDataset);
+                        for (var i = 0; i<data.rdate.length; i++){
+                            myline.data.labels.push(data.rdate[i]);
+                        }
+                        myline.update();
+
+                    },
+                });
+            });
+    </script>
+    <script src="{% static "/js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "/js/main.js" %}"></script>
+</body>
+
+</html>
