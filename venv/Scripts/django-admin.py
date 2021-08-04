@@ -1,4 +1,4 @@
-#!C:\Users\iair1\Documents\olympicNow\venv\Scripts\python.exe
+#!C:\Users\iair1\Documents\Olympic_Now\venv\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
