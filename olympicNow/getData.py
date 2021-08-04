@@ -44,7 +44,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.55'}
 
-dateIndex = pandas.date_range(start='20210728', end='20210728')
+dateIndex = pandas.date_range(start='20210802', end='20210803')
 dateList = dateIndex.strftime("%Y%m%d").tolist()
 
 for searchDate in dateList:
@@ -80,13 +80,13 @@ for searchDate in dateList:
     print(cntTotal)
     print(cntPlayers)
     print(cntSports)
-#     for n, c in cntSports:
-#         cursor.execute("INSERT INTO OLPNOW_SPORTS VALUES (:RDATE, :SNAME, :SCOUNT)", [dateDate, n, c])
-#     for n, c in cntPlayers:
-#         cursor.execute("INSERT INTO OLPNOW_PLAYERS VALUES (:RDATE, :PNAME, :PCOUNT)", [dateDate, n, c])
-#
-# conn.commit()
-# conn.close()
+    for n, c in cntSports:
+        cursor.execute("INSERT INTO OLPNOW_SPORTS VALUES (:RDATE, :SNAME, :SCOUNT)", [dateDate, n, c])
+    for n, c in cntPlayers:
+        cursor.execute("INSERT INTO OLPNOW_PLAYERS VALUES (:RDATE, :PNAME, :PCOUNT)", [dateDate, n, c])
+
+conn.commit()
+conn.close()
 # tagSports = {}
 # tagPlayers = {}
 #

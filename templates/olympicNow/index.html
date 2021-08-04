@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLYMPIC NOW</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "/css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendors/iconly/bold.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendors/perfect-scrollbar/perfect-scrollbar.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendors/bootstrap-icons/bootstrap-icons.css" %}" />
+    <link rel="stylesheet" href="{% static "/css/app.css" %}" />
+    <link rel="shortcut icon" href="{% static "/images/favicon.svg" %}" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5/locales-all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Cafe24SsurroundAir';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body style="font-family: 'Cafe24SsurroundAir' !important;">
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="/" style="font-size: 19px"><img src="{% static "/images/logo/logo.png" %}">&nbsp;OLYMPIC NOW</a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-item active">
+                            <a href="/" class='sidebar-link'>
+                                <i class="bi bi-bar-chart-fill"></i>
+                                <span class="mt-1">종합</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item ">
+                            <a href="/sports" class='sidebar-link'>
+                                <i class="bi bi-trophy-fill"></i>
+                                <span class="mt-1">종목</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item ">
+                            <a href="/players" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span class="mt-1">선수</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            <div class="page-content">
+                <div class="row mb-4">
+                <div class="input-group col-md-6" style="width: 400px">
+                    <input type="text" class="form-control selector dateSel" placeholder="날짜 or 기간 입력">
+                    <button class="btn btn-primary" type="button" id="dateBtn">검색</button>
+                    <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setTimeout(function() {calendar.render();},200)">달력</button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" id="wcCreate" style="display:none;">워드클라우드생성</button>
+                    <button class="btn btn-success" id="wcShow" style="display:none;" data-bs-toggle="modal" data-bs-target="#wcModal">워드클라우드확인</button>
+                    <div class="spinner-border text-primary mt-1" role="status" style="display:none;" id="wcProgress">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                </div>
+                <section class="row">
+                    <div class="col-12 col-lg-12">
+                        <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body" style="height: 400px">
+                                    <canvas id="sportsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body" style="height: 400px">
+                                    <canvas id="playerChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">날짜 선택</h5>
+            </div>
+            <div class="modal-body">
+                <div id="calendar" style="width: auto"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="wcModal" tabindex="-1" aria-labelledby="wcModal" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">워드클라우드</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="row" style="text-align: center">
+            <div class="col-lg-6">
+                <img src="" id="simage" width="450px">
+            </div>
+            <div class="col-lg-6">
+                <img src="" id="pimage" width="450px">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+    <script>
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            themeSystem: "defualt",
+            initialView: "dayGridMonth",
+            locale: "ko",
+            contentHeight: "auto",
+            events: [
+                {title: "올림픽 기간", start: "2021-07-23", end: "2021-08-08"},
+            ],
+        });
+        calendar.gotoDate("2021-07-30");
+    </script>
+    <script>
+
+var chartColors = {
+    red: 'rgb(255, 99, 132)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    info: '#41B1F9',
+    blue: '#3245D1',
+    purple: 'rgb(153, 102, 255)',
+    grey: '#6f7072'
+};
+
+Chart.defaults.font.family = 'Cafe24SsurroundAir';
+var playerChart = document.getElementById("playerChart").getContext("2d");
+var playerBar = new Chart(playerChart, {
+    type: 'bar',
+    data: {
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        barRoundness: 1,
+        title: {
+            display: true,
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    suggestedMax: 40 + 20,
+                    padding: 10,
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false,
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    display: true,
+                    drawBorder: false
+                }
+            }]
+        }
+    }
+});
+
+
+var sportsChart = document.getElementById("sportsChart").getContext("2d");
+var sportsBar = new Chart(sportsChart, {
+    type: 'bar',
+    data: {
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        barRoundness: 1,
+        title: {
+            display: true,
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    suggestedMax: 40 + 20,
+                    padding: 10,
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false,
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    display: true,
+                    drawBorder: false
+                }
+            }]
+        }
+    }
+});
+
+flatpickr.localize(flatpickr.l10ns.ko);
+
+$(".selector").flatpickr({
+    enable: [{ from: "2021-07-01",
+            to: "2021-08-30" }],
+    mode : "range",
+    defaultDate : "2021-07-23 ~ 2021-08-08"
+
+});
+
+    </script>
+    <script>
+        var getResult;
+        $('#dateBtn').on('click', function(){
+            selDate = $('.dateSel').val();
+            startDate=selDate.substr(0,10);
+            endDate=selDate.substr(selDate.length-10,10);
+                var params = {startDate: startDate, endDate: endDate};
+                $.ajax({
+                    url: "{% url 'data' %}",
+                    type: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    success: function (data) {
+                        getResult = data;
+                        playerBar.data.datasets.pop();
+                        for (var i = 0; i<20; i++){
+                            playerBar.data.labels.splice(-1, 1);
+                        }
+                        const playerDataset = {
+                            label: '기사 언급 횟수',
+                            backgroundColor: [chartColors.blue],
+                            data: data.pcount,
+                          };
+                        playerBar.data.datasets.push(playerDataset);
+                        for (var i = 0; i<20; i++){
+                            playerBar.data.labels.push(data.pname[i]);
+                        }
+                        playerBar.update();
+
+                        sportsBar.data.datasets.pop();
+                        for (var i = 0; i<20; i++){
+                            sportsBar.data.labels.splice(-1, 1);
+                        }
+                        const sportsDataset = {
+                            label: '기사 언급 횟수',
+                            backgroundColor: [chartColors.green],
+                            data: data.scount,
+                          };
+                        sportsBar.data.datasets.push(sportsDataset);
+                        for (var i = 0; i<20; i++){
+                            sportsBar.data.labels.push(data.sname[i]);
+                        }
+                        sportsBar.update();
+
+                        $('#wcCreate').show();
+                        $('#wcShow').hide();
+
+                    },
+                });
+            });
+        $('#wcCreate').on('click', function(){
+            $('#wcCreate').hide();
+            $('#wcProgress').show();
+            $.ajax({
+                url: "{% url 'getwc' %}",
+                    type: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(getResult),
+                    success: function (data) {
+                    data.simage
+                        $('#wcProgress').hide();
+                        $('#wcShow').show();
+                        $('#simage').attr("src","/static/images/wc/"+data.simage+"");
+                        $('#pimage').attr("src","/static/images/wc/"+data.pimage+"");
+                    },
+            });
+        });
+    </script>
+    <script src="{% static "/js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "/js/main.js" %}"></script>
+</body>
+
+</html>
