@@ -44,7 +44,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.55'}
 
-dateIndex = pandas.date_range(start='20210804', end='20210810')
+dateIndex = pandas.date_range(start='20210810', end='20210810')
 dateList = dateIndex.strftime("%Y%m%d").tolist()
 
 for searchDate in dateList:
@@ -77,8 +77,9 @@ for searchDate in dateList:
     cntSports = Counter(getSports).most_common()
     cntPlayers = Counter(getPlayers).most_common()
     cntTotal = Counter(getTotal).most_common()
+    print(cntTotal)
 
-
+#
     for n, c in cntSports:
         cursor.execute("INSERT INTO OLPNOW_SPORTS VALUES (:RDATE, :SNAME, :SCOUNT)", [dateDate, n, c])
     for n, c in cntPlayers:

@@ -1,6 +1,6 @@
 @echo off
 
-set "VIRTUAL_ENV=C:\Users\iair1\Documents\Olympic_Now\venv"
+set "VIRTUAL_ENV=C:\Users\iair1\Documents\OlympicNow\venv"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
